@@ -1,0 +1,43 @@
+// Macros — a single-user macro tracker. Meals are logged by photo and/or
+// description, estimated by Claude, reviewed by the user, and stored here.
+// MongoDB via Prisma 6 (Prisma 7 does not yet support MongoDB).
+
+generator client {
+  provider      = "prisma-client-js"
+  // "native" for local dev; the rhel target is for Vercel's Linux runtime.
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+/// Generic key/value settings (timezone, daily macro targets, etc.).
+model Setting {
+  key   String @id @map("_id")
+  value Json
+}
+
+/// A logged meal. Photos are never persisted — the image is sent to Claude for
+/// estimation and discarded; only the resulting macros are stored.
+model Meal {
+  id        String   @id @default(cuid()) @map("_id")
+  /// "YYYY-MM-DD" in the user's timezone at the moment it was logged. Denormalized
+  /// so that changing the timezone setting later never re-buckets existing meals.
+  dayKey    String
+  eatenAt   DateTime
+  name      String
+  notes     String? // the clarifying text the user typed
+  items     Json // MealItem[] — itemized breakdown, kept for display and editing
+  calories  Float
+  proteinG  Float
+  carbsG    Float
+  fatG      Float
+  source    String // "ai_photo" | "ai_text" | "manual"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([dayKey])
+  @@index([eatenAt])
+}

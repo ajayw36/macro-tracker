@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0a0b07;
+  --color-bg-elevated: #101208;
+  --color-card: #14160d;
+  --color-card-hover: #181b10;
+  --color-border: #23271a;
+  --color-border-strong: #303620;
+  --color-lime: #cdfa3e;
+  --color-lime-dim: #9bbd2e;
+  --color-text: #e9ecdf;
+  --color-muted: #8a8f7a;
+  --color-faint: #5c6150;
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+body {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* tabular numerals for stat readouts */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.input {
+  border-radius: 0.375rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-elevated);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  width: 100%;
+}
+.input:focus {
+  outline: none;
+  border-color: color-mix(in srgb, var(--color-lime) 50%, transparent);
+}
+
+/* electric-lime glow on chart lines/areas */
+.glow-lime .recharts-area-curve,
+.glow-lime .recharts-line-curve {
+  filter: drop-shadow(0 0 5px rgba(205, 250, 62, 0.55));
+}
